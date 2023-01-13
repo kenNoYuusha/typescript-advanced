@@ -4,7 +4,18 @@ import { CreateProductDto, updateProductDto } from '../dtos/product.dto';
 import { ProductService } from '../models/product-service.model';
 
 export class ProductHttpService implements ProductService {
-  private url:string = "https://api.escuelajs.co/api/v1/products";
+
+  private static instance: ProductHttpService | null = null;
+  private constructor(private url:string){
+    //empty
+  }
+
+  static createInstance(): ProductHttpService {
+    if(ProductHttpService.instance === null) {
+      ProductHttpService.instance = new ProductHttpService("https://api.escuelajs.co/api/v1/products")
+    }
+    return ProductHttpService.instance
+  }
 
   async getAll() {
     const { data } = await axios.get<Product[]>(this.url);
